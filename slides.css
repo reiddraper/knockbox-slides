@@ -33,3 +33,7 @@ ul li {
 .content ul {
     padding-left: 0 !important;
 }
+
+pre code {
+    //margin: 6em;
+}
