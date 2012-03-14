@@ -1,2 +1,13 @@
 { "name": "knockbox", "sections": [
-    {"section":"intro"}]}
+    {"section":"intro"},
+    {"section":"what-is-ec"},
+    {"section":"clojure-perspective"},
+    {"section":"protocols"},
+    {"section":"conflict-resolution"},
+    {"section":"crdt-and-implementation"},
+    {"section":"serialization"},
+    {"section":"use-cases"},
+    {"section":"gc"},
+    {"section":"testing"},
+    {"section":"questions"}
+    ]}
