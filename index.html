@@ -1,0 +1,333 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>knockbox</title>
+
+  <meta name="viewport" content="width=device-width"/>
+
+  <link rel="stylesheet" href="./css/reset.css" type="text/css"/>
+  <link rel="stylesheet" href="./css/showoff.css" type="text/css"/>
+
+  <script type="text/javascript" src="./js/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="./js/jquery.cycle.all.js"></script>
+	<script type="text/javascript" src="./js/jquery-print.js"></script>
+  <script type="text/javascript" src="./js/jquery.batchImageLoad.js"></script>
+
+  <script type="text/javascript" src="./js/jquery.doubletap-0.1.js"></script>
+
+  <script type="text/javascript" src="./js/fg.menu.js"></script>
+  <script type="text/javascript" src="./js/showoff.js"></script>
+  <script type="text/javascript" src="./js/jTypeWriter.js"> </script>
+  <script type="text/javascript" src="./js/sh_main.min.js"></script>
+  <script type="text/javascript" src="./js/core.js"></script>
+  <script type="text/javascript" src="./js/showoffcore.js"></script>
+  <script type="text/javascript" src="./js/coffee-script.js"></script>
+
+  <link type="text/css" href="./css/fg.menu.css" media="screen" rel="stylesheet" />
+  <link type="text/css" href="./css/theme/ui.all.css" media="screen" rel="stylesheet" />
+  <link type="text/css" href="./css/sh_style.css" rel="stylesheet" >
+
+  
+    <link rel="stylesheet" href="file/slides.css" type="text/css"/>
+  
+
+  
+
+  <script type="text/javascript">
+  $(function(){
+      setupPreso(false, './');
+  });
+  </script>
+
+</head>
+
+<body>
+
+<a tabindex="0" href="#search-engines" class="fg-button fg-button-icon-right ui-widget ui-state-default ui-corner-all" id="navmenu"><span class="ui-icon ui-icon-triangle-1-s"></span>slides</a>
+<div id="navigation" class="hidden"></div>
+
+<div id="help">
+  <table>
+    <tr><td class="key">z, ?</td><td>toggle help (this)</td></tr>
+    <tr><td class="key">space, &rarr;</td><td>next slide</td></tr>
+    <tr><td class="key">shift-space, &larr;</td><td>previous slide</td></tr>
+    <tr><td class="key">d</td><td>toggle debug mode</td></tr>
+    <tr><td class="key">## &lt;ret&gt;</td><td>go to slide #</td></tr>
+    <tr><td class="key">c, t</td><td>table of contents (vi)</td></tr>
+    <tr><td class="key">f</td><td>toggle footer</td></tr>
+    <tr><td class="key">r</td><td>reload slides</td></tr>
+    <tr><td class="key">n</td><td>toggle notes</td></tr>
+    <tr><td class="key">p</td><td>run preshow</td></tr>
+  </table>
+</div>
+
+<div class="buttonNav">
+  <input type="submit" onClick="prevStep();" value="prev"/>
+  <input type="submit" onClick="nextStep();" value="next"/>
+</div>
+
+<div id="preso">loading presentation...</div>
+<div id="footer">
+  <span id="slideInfo"></span>
+  <span id="debugInfo"></span>
+  <span id="notesInfo"></span>
+</div>
+
+<div id="slides" class="offscreen" style="display:none;">
+<div class="slide" data-transition="none"><div class="content title-slide" ref="intro/01/1">
+<h1>knockbox</h1>
+
+<p>Reid Draper</p>
+
+<p>@reiddraper</p></div>
+</div><div class="slide" data-transition="none"><div class="content smbullets" ref="intro/01/2">
+<h1>Overview</h1>
+
+<ul>
+<li>Eventual Consistency</li>
+<li>knockbox</li>
+<li>Use Cases</li>
+<li>Garbage Collection</li>
+<li>Testing</li>
+</ul>
+</div>
+</div><div class="slide" data-transition="none"><div class="content smbullets" ref="intro/01/3">
+<ul>
+<li>http://git.io/knockbox</li>
+<li>Apache 2 License</li>
+</ul>
+</div>
+</div><div class="slide" data-transition="none"><div class="content" ref="what-is-ec/01/1">
+<h1>What is Eventual Consistency?</h1></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="what-is-ec/01/2">
+<p>Replicas are <em>not</em> updated
+atomically, but eventually
+converge.</p></div>
+</div><div class="slide" data-transition="none"><div class="content smbullets" ref="what-is-ec/01/3">
+<h1>Why?</h1>
+
+<ul>
+<li>Availability</li>
+<li>Latency</li>
+<li>Durability</li>
+<li>Operational Ease</li>
+</ul>
+</div>
+</div><div class="slide" data-transition="none"><div class="content full-page" ref="what-is-ec/01/4">
+<p><img src="./file/what-is-ec/replicas.svg" alt="replicas"/></p></div>
+</div><div class="slide" data-transition="none"><div class="content full-page" ref="what-is-ec/01/5">
+<p><img src="./file/what-is-ec/subway.jpg" width="526" height="640" alt="subway"/></p>
+
+<p>CC BY-ND 2.0
+CTA Web</p></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="conflict-resolution/01">
+<h1>Conflict Resolution</h1>
+
+<pre class="sh_clojure"><code>{:foo 1 :bar 2}
+{:baz 1}
+{:bar 7}</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="knockbox/01/1">
+<pre class="sh_clojure"><code>(require 'knockbox.core)
+(knockbox.core/resolve [a b c d])</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="knockbox/01/2">
+<pre class="sh_clojure"><code>(require 'knockbox.core)
+(require '[knockbox.sets :as kbsets])
+
+(def original (into (kbsets/lww)
+              #{:mug :kettle}))</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="knockbox/01/3">
+<pre class="sh_clojure"><code>(def a (disj original :kettle))
+(def b (conj original :coffee))
+
+(def c (conj original :coffee-roaster))
+;; this one wins because its
+;; timestamp is later
+(def d (disj original :coffee-roaster))
+
+(println (knockbox.core/resolve
+  [a b c d]))
+;; =&gt; #{:coffee :mug}</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="knockbox/01/4">
+<pre class="sh_clojure"><code>(def original
+  (into (kbsets/observed-remove)
+        #{:crust :sugar :egg}))
+
+(def a (conj original :blueberries))
+(def b (conj original :blueberries))
+
+(def c (disj a :blueberries))
+
+(println (knockbox.core/resolve [b c]))
+;; =&gt; #{:crust :sugar :egg :blueberries}</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="knockbox/01/5">
+<pre class="sh_clojure"><code>(require '(knockbox core registers))
+
+(def a (knockbox.registers/lww 1))
+(def b (knockbox.registers/lww 2))
+(def c (knockbox.registers/lww 3))
+
+(.value a)
+;; =&gt; 1
+
+(.value (knockbox.core/resolve [c b a]))
+;; =&gt; 3</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="clojure-perspective/01/1">
+<pre><code>        Coordinated Synchronous
+Ref     Yes         Yes
+Atom    No          Yes
+Agent   No          No
+</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="clojure-perspective/01/2">
+<h1>Avout</h1></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="protocols/01/1">
+<h1>Protocol</h1>
+
+<pre class="sh_clojure"><code>(resolve [a b])
+(gc [this time items])</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content smbullets" ref="protocols/01/2">
+<ul>
+<li>Sets</li>
+<li>Maps</li>
+<li>Registers</li>
+<li>Counters (maybe?)</li>
+</ul>
+</div>
+</div><div class="slide" data-transition="none"><div class="content" ref="protocols/01/3">
+<pre class="sh_clojure"><code>(conj a :foo)
+(assoc b :bar [1 2 3])</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content smbullets" ref="protocols/01/4">
+<ul>
+<li>Use existing code</li>
+<li>Resolution-scheme agnostic</li>
+</ul>
+</div>
+</div><div class="slide" data-transition="none"><div class="content" ref="crdt-and-implementation/01/1">
+<p><em>A comprehensive study of Convergent and Commutative Replicated Data Types</em></p>
+
+<p>Shapiro, Pregui&#xE7;a, Baquero, Zawirski</p>
+
+<p><a href="http://bit.ly/crdt-paper">http://bit.ly/crdt-paper</a></p></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="crdt-and-implementation/01/2">
+<pre class="sh_clojure"><code>#{:foo :bar}
+
+#{:bar :baz}
+
+(clojure.set/union ...)</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="crdt-and-implementation/01/3">
+<p>but what about...</p>
+
+<pre class="sh_clojure"><code>#{:foo :bar}
+
+(disj #{:bar :qux} :bar)</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="crdt-and-implementation/01/4">
+<pre class="sh_clojure"><code>{:adds #{:foo :qux}
+ :dels #{:bar}}</code></pre>
+
+<p>better, but can't add
+something back</p></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="crdt-and-implementation/01/5">
+<p>This is where time comes in...
+(logical or physical)</p></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="crdt-and-implementation/01/6">
+<pre class="sh_clojure"><code>{:adds {:foo #{"3359ce86" ...}}
+ :dels {:foo #{"4ae98f10"}}}</code></pre>
+
+<p>Observed-Remove Set</p></div>
+</div><div class="slide" data-transition="none"><div class="content smbullets" ref="serialization/01">
+<p>Serialization</p>
+
+<ul>
+<li>JSON</li>
+<li>Reader</li>
+</ul>
+
+
+<p>Other languages can participate</p></div>
+</div><div class="slide" data-transition="none"><div class="content smbullets" ref="use-cases/01/1">
+<h1>Use Cases</h1>
+
+<ul>
+<li>Mobile</li>
+<li>Riak</li>
+</ul>
+</div>
+</div><div class="slide" data-transition="none"><div class="content smbullets" ref="use-cases/01/2">
+<h1>Mobile</h1>
+
+<ul>
+<li>Feeds Subscribed</li>
+<li>"Read" or "Unread"</li>
+</ul>
+</div>
+</div><div class="slide" data-transition="none"><div class="content smbullets" ref="use-cases/01/3">
+<p>Music Service ala</p>
+
+<p>Rdio or Spotify</p>
+
+<ul>
+<li>Sync'd to mobile</li>
+</ul>
+</div>
+</div><div class="slide" data-transition="none"><div class="content smbullets" ref="use-cases/01/4">
+<h1>Riak</h1>
+
+<ul>
+<li>Followers</li>
+<li>Shopping Cart</li>
+</ul>
+</div>
+</div><div class="slide" data-transition="none"><div class="content" ref="use-cases/01/5">
+<pre class="sh_clojure"><code>(defbox Account
+  (:name       LWWRegister
+               :required true)
+  (:address    LWWRegister
+               :required true)
+  (:followers  ObservedRemoveSet
+               :default (lww-set)))</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="use-cases/01/6">
+<pre class="sh_clojure"><code>(def person (Account.))
+
+(-&gt; person
+  (update-in [:followers] conj :bar)
+  (assoc-in  [:name]      "Reid")
+  (assoc-in  [:address]   "27 Main"))</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="gc/01/1">
+<h1>Garbage Collection</h1>
+
+<p class="..">with no coordination</p></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="gc/01/2">
+<p>Deleted/old item comes back</p></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="gc/01/3">
+<pre class="sh_clojure"><code>(gc [this
+     gc-max-seconds
+     gc-max-items])</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="gc/01/4">
+<p>Counters are hard</p>
+
+<pre class="sh_clojure"><code>{:a 35
+ :b 43
+ :c 125
+ :d 93}</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="testing/01">
+<p>Uses Midje</p>
+
+<pre class="sh_clojure"><code>(= (knockbox.core/resolve ?z)
+   (knockbox.core/resolve
+     (reverse ?z)))
+
+(= ?x (deserialize (serialize ?x))</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content smbullets" ref="questions/01">
+<h1>Questions?</h1>
+
+<ul>
+<li>@reiddraper</li>
+<li>http://git.io/knockbox</li>
+</ul>
+</div>
+</div></div>
+
+</body>
+</html>
